@@ -55,7 +55,11 @@ const HomeScreen = () => {
         <Text style={styles.headerLeftText}>
           Find your desire{'\n'}health solution
         </Text>
-        <Image source={notification} style={styles.headerImage} />
+        <Image
+          source={notification}
+          style={styles.headerImage}
+          onPress={() => navigation.navigate('NotificationScreen')}
+        />
       </View>
       <View style={styles.searchContainer}>
         <Image source={searchIcon} style={styles.searchIcon} />
@@ -97,10 +101,14 @@ const HomeScreen = () => {
         <TouchableOpacity style={styles.bottomBarItem}>
           <Image source={homeIcon} style={styles.bottomBarIcon} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bottomBarItem}>
+        <TouchableOpacity
+          style={styles.bottomBarItem}
+          onPress={() => navigation.navigate('MessageScreen')}>
           <Image source={messageIcon} style={styles.bottomBarIcon} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.bottomBarItem}>
+        <TouchableOpacity
+          style={styles.bottomBarItem}
+          onPress={() => navigation.navigate('ScheduleScreen')}>
           <Image source={calendarIcon} style={styles.bottomBarIcon} />
         </TouchableOpacity>
         <TouchableOpacity

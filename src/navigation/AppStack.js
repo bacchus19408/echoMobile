@@ -8,6 +8,9 @@ import SignUpScreen from '../screens/SignUpScreen'; // Ensure correct import pat
 import SignUpSuccessModal from '../screens/SignUpSuccessModal'; // Ensure correct import path
 import HomeScreen from '../screens/HomeScreen';
 import UserProfileScreen from '../screens/UserProfilerScreen';
+/* import MessageScreen from '../screens/MessageScreen';
+import ScheduleScreen from '../screens/ScheduleScreen';
+import NotificationScreen from '../screens/NotificationScreen'; */
 
 const Stack = createStackNavigator();
 
