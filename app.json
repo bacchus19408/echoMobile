@@ -1,4 +1,21 @@
 {
+const mongoose = require("mongoose");
+
+
+const ArticleSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  content: { type: String, required: true },
+  category: {
+    type: String,
+    required: true,
+    enum: ["News", "Info", "Programs"],
+  },
+  publishedDate: { type: Date, default: Date.now },
+  author: { type: String },
+  link: { type: String },
+});
+
+module.exports = mongoose.model("Article", ArticleSchema);
   "name": "echoMobile",
   "displayName": "echoMobile"
 }

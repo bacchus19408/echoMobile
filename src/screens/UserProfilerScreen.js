@@ -1,19 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  ImageBackground,
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, Image, TouchableOpacity, StyleSheet} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {launchImageLibrary} from 'react-native-image-picker';
-import LinearGradient from 'react-native-linear-gradient';
-
-// Import all necessary assets
 import cameraIcon from '../assets/Icon/Camera.png';
 import chevronLeft from '../assets/Icon/left-chevron.png';
 import chevronRight from '../assets/Icon/ChevronRight.png';
@@ -24,14 +12,13 @@ import ehr from '../assets/Icon/document.png';
 import prescription from '../assets/Icon/prescription.png';
 import setting from '../assets/Icon/gear.png';
 import logout from '../assets/Icon/logout.png';
-import {profile} from 'console';
-// Ensure to import additional assets used in the App component
+import {getUserData} from '../services/apiService';
 
 const UserProfileScreen = ({navigation}) => {
   const route = useRoute();
-
   const [imageUri, setImageUri] = useState(null);
-  const [userName, setUserName] = useState(route.params?.userName || '');
+  const [userName, setUserName] = useState('');
+  const [userData, setUserData] = useState(null);
 
   useEffect(() => {
     navigation.setOptions({
@@ -42,7 +29,20 @@ const UserProfileScreen = ({navigation}) => {
         </TouchableOpacity>
       ),
     });
-  }, [navigation]);
+
+    const fetchData = async () => {
+      try {
+        const userId = route.params?.userId;
+        const data = await getUserData(userId);
+        setUserName(data.name);
+        setUserData(data);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchData();
+  }, [navigation, route.params?.userId]);
 
   const pickImage = () => {
     launchImageLibrary({mediaType: 'photo'}, response => {
@@ -63,18 +63,6 @@ const UserProfileScreen = ({navigation}) => {
   });
 
   const [glucoseLevels, setGlucoseLevels] = useState(null);
-
-  const getHeartRate = () => {
-    // Code to get the heart rate goes here
-  };
-
-  const getCalories = () => {
-    // Code to get the calories goes here
-  };
-
-  const getWeight = () => {
-    // Code to get the weight goes here
-  };
 
   const getBloodPressure = () => {
     setBloodPressure({systolic: 120, diastolic: 80}); // simulate a fetched value
@@ -100,7 +88,7 @@ const UserProfileScreen = ({navigation}) => {
         <View style={styles.headerTop}>
           <TouchableOpacity
             style={styles.backButton}
-            onPress={HomeScreen => navigation.goBack()}>
+            onPress={() => navigation.goBack()}>
             <Image style={styles.chevronLeft} source={chevronLeft} />
           </TouchableOpacity>
           <Image style={styles.setting} source={setting} />
@@ -109,7 +97,9 @@ const UserProfileScreen = ({navigation}) => {
           <TouchableOpacity onPress={pickImage}>
             <Image style={styles.profilePic} source={cameraIcon} />
           </TouchableOpacity>
-          {imageUri && <Image source={{uri: imageUri}} style={styles.image} />}
+          {imageUri && (
+            <Image source={{uri: imageUri.uri}} style={styles.image} />
+          )}
           {userName && <Text style={styles.userName}>{userName}</Text>}
         </View>
         <View style={styles.healthContainer}>
@@ -157,10 +147,6 @@ const UserProfileScreen = ({navigation}) => {
           <Text style={styles.label}>Prescription Management</Text>
           <Image style={styles.chevronRight} source={chevronRight} />
         </View>
-        {/*         <View style={styles.navlink}>
-          <Image style={styles.navProfileIcon} source={wallet} />
-          <Text style={styles.label}>Messages</Text>
-        </View> */}
         <View style={styles.navlink}>
           <Image style={styles.navProfileIcon} source={faq} />
           <Text style={styles.label}>FAQs</Text>
@@ -216,11 +202,6 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 100,
     marginVertical: 20,
-  },
-  input: {
-    width: '80%',
-    padding: 10,
-    marginVertical: 10,
   },
   userName: {
     fontSize: 20,
